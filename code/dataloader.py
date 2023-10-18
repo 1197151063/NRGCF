@@ -24,11 +24,12 @@ from scipy.sparse import csr_matrix
 import scipy.sparse as sp
 import world
 from world import cprint
+from world import bprint
 from time import time
 from sklearn.model_selection import train_test_split
 import random
 
-seed = 2020
+seed = world.seed
 import random
 import numpy as np
 
@@ -93,7 +94,7 @@ class Loader(BasicDataset):
     gowalla dataset,['gowalla', 'yelp2018', 'amazon-book']:
     """
 
-    def __init__(self, config=world.config, path="../data/gowalla", flag_test=0):
+    def __init__(self, config=world.config, path="../data/gowalla", flag=0,g=None):
         # train or test
         cprint(f'loading [{path}]')
         self.split = config['A_split']
@@ -108,26 +109,43 @@ class Loader(BasicDataset):
         self.path = path
         trainUniqueUsers, trainItem, trainUser = [], [], []
         testUniqueUsers, testItem, testUser = [], [], []
+        m_test_items = []
         self.traindataSize = 0
         self.testDataSize = 0
         self.args = config['args']
+        self.config = config
+        if flag == 0:
+            with open(train_file) as f:
+                for l in f.readlines():
+                    if len(l) > 0:
+                        l = l.strip('\n').split(' ')
+                        items = [int(i) for i in l[1:]]
+                        uid = int(l[0])
+                        trainUniqueUsers.append(uid)
+                        trainUser.extend([uid] * len(items))
+                        trainItem.extend(items)
+                        self.m_item = max(self.m_item, max(items))
+                        self.n_user = max(self.n_user, uid)
+                        self.traindataSize += len(items)
 
-        with open(train_file) as f:
-            for l in f.readlines():
-                if len(l) > 0:
+            self.trainUniqueUsers = np.array(trainUniqueUsers)
+            self.trainUser = np.array(trainUser)
+            self.trainItem = np.array(trainItem)
+        
+        else:
+            with open(train_file) as f:
+                for l in f.readlines():
                     l = l.strip('\n').split(' ')
-                    items = [int(i) for i in l[1:]]
                     uid = int(l[0])
+                    items = np.where(g[uid]==1).tolist()
                     trainUniqueUsers.append(uid)
                     trainUser.extend([uid] * len(items))
                     trainItem.extend(items)
-                    self.m_item = max(self.m_item, max(items))
-                    self.n_user = max(self.n_user, uid)
                     self.traindataSize += len(items)
-
-        self.trainUniqueUsers = np.array(trainUniqueUsers)
-        self.trainUser = np.array(trainUser)
-        self.trainItem = np.array(trainItem)
+            self.trainUniqueUsers = np.array(trainUniqueUsers)
+            self.trainUser = np.array(trainUser)
+            self.trainItem = np.array(trainItem)
+        
         with open(test_file) as f:
             for l in f.readlines():
 
@@ -143,12 +161,13 @@ class Loader(BasicDataset):
                     testUniqueUsers.append(uid)
                     testUser.extend([uid] * len(items))
                     testItem.extend(items)
+                    m_test_items.append(items)
                     self.m_item = max(self.m_item, max(items))
                     self.n_user = max(self.n_user, uid)
                     self.testDataSize += len(items)
         self.m_item += 1
         self.n_user += 1
-
+        
         # original setting
         testUser = testUser
         testItem = testItem
@@ -161,6 +180,7 @@ class Loader(BasicDataset):
 
         self.valUser = np.array(valUser)
         self.valItem = np.array(valItem)
+        self.m_test_items = m_test_items
 
         self.Graph = None
         print(f"{self.trainDataSize} interactions for training")
@@ -168,10 +188,29 @@ class Loader(BasicDataset):
         print(f"{world.dataset} Sparsity : {(self.trainDataSize + self.testDataSize) / self.n_users / self.m_items}")
 
         # (users,items), bipartite graph
-        # R 
-        self.UserItemNet = csr_matrix((np.ones(len(self.trainUser)), (self.trainUser, self.trainItem)),
+        # R
+        if flag == 0: 
+            self.UserItemNet = csr_matrix((np.ones(len(self.trainUser)), (self.trainUser, self.trainItem)),
                                       shape=(self.n_user, self.m_item))
+        else:
+            self.UserItemNet = csr_matrix(g)
 
+        if config['add_noise'] == 1 and flag==0:#random noise poison 
+            graph = self.UserItemNet.toarray()
+            print(graph.shape)
+            nr = config['noise_rate']
+            cprint(f'adding noise at noise rate {nr}')
+            for user in trainUniqueUsers:
+                maxlen = int(nr * graph[user][graph[user]==1].size)
+                zero_ind = np.where(graph[user]==0)
+                one_ind = np.where(graph[user]==1)
+                sample_zero = np.random.choice(zero_ind[0],maxlen,replace=False)
+                sample_one = np.random.choice(one_ind[0],maxlen,replace=False)
+                graph[user][sample_zero] = 1
+                graph[user][sample_one] = 0
+
+            self.UserItemNet = csr_matrix(graph)
+        
         self.users_D = np.array(self.UserItemNet.sum(axis=1)).squeeze()
         self.users_D[self.users_D == 0.] = 1
         self.items_D = np.array(self.UserItemNet.sum(axis=0)).squeeze()
@@ -257,7 +296,18 @@ class Loader(BasicDataset):
             adj_mat[self.n_users:, :self.n_users] = R.T
             adj_mat = adj_mat.todok()
 
-            norm_adj = adj_mat.tocsr()
+            
+            if self.config['model']=='GTN':
+                norm_adj = adj_mat.tocsr()
+            else:     
+                rowsum = np.array(adj_mat.sum(axis=1))
+                d_inv = np.power(rowsum, -0.5).flatten()
+                d_inv[np.isinf(d_inv)] = 0.
+                d_mat = sp.diags(d_inv)
+                    
+                norm_adj = d_mat.dot(adj_mat)
+                norm_adj = norm_adj.dot(d_mat)
+                norm_adj = norm_adj.tocsr()
             end = time()
             print(f"costing {end - s}s, saved mat...")
 

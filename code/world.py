@@ -20,10 +20,10 @@ import torch
 from enum import Enum
 from parse import parse_args
 import multiprocessing
-
-seed = 2020
 import random
 import numpy as np
+args = parse_args()
+seed = args.seed
 
 torch.manual_seed(seed)
 np.random.seed(seed)
@@ -31,7 +31,7 @@ random.seed(seed)
 torch.cuda.manual_seed(seed)
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-args = parse_args()
+
 
 ROOT_PATH = "./"
 CODE_PATH = join(ROOT_PATH, 'code')
@@ -66,6 +66,11 @@ config['args'] = args
 config['dataset'] = args.dataset
 config['epochs'] = args.epochs
 config['lambda2'] = args.lambda2
+config['add_noise'] = args.add_noise
+config['noise_rate'] = args.noise_rate
+config['lightGCN_n_layers']= args.layer
+config['model']=args.model 
+
 
 GPU = torch.cuda.is_available()
 torch.cuda.set_device(args.gpu_id)
@@ -90,3 +95,6 @@ simplefilter(action="ignore", category=FutureWarning)
 
 def cprint(words: str):
     print(f"\033[0;30;43m{words}\033[0m")
+
+def bprint(words:str):
+    print(f"\033[0;30;45m{words}\033[0m")

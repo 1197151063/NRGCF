@@ -28,11 +28,11 @@ import torch.nn.functional as F
 
 from torch_sparse import sum, mul, fill_diag, remove_diag
 from torch.nn import Parameter
-
+import world
 import numpy as np
 import time
 
-seed = 2020
+seed = world.seed
 import random
 import numpy as np
 

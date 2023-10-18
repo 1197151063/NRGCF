@@ -18,7 +18,7 @@ import model
 import utils
 from pprint import pprint
 
-seed = 2020
+seed = world.seed
 import random
 import numpy as np
 import torch
@@ -41,6 +41,6 @@ print("Test Topks:", world.topks)
 print("using bpr loss")
 print('===========end===================')
 
-MODELS = {
-    'gtn': model.GTN,
-}
+# MODELS = {
+#     'gtn': model.GTN,
+# }

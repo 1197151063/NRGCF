@@ -25,7 +25,7 @@ import time, datetime
 import Procedure
 from os.path import join
 
-seed = 2020
+seed = world.seed
 import random
 import numpy as np
 

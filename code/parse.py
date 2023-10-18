@@ -16,16 +16,6 @@ The original version of this code base was from LightGCN-pytorch: https://github
 
 
 import argparse
-import torch
-
-seed = 2020
-import random
-import numpy as np
-
-torch.manual_seed(seed)
-np.random.seed(seed)
-random.seed(seed)
-torch.cuda.manual_seed(seed)
 
 
 def parse_args():
@@ -45,7 +35,7 @@ def parse_args():
                         help="the batch size for bpr loss training procedure")
     parser.add_argument('--a_fold', type=int, default=100,
                         help="the fold num used to split large adj matrix, like gowalla")
-    parser.add_argument('--testbatch', type=int, default=100,
+    parser.add_argument('--testbatch', type=int, default=500,
                         help="the batch size of users for testing, 100")
     parser.add_argument('--path', type=str, default="./checkpoints",
                         help="path to save weights")
@@ -57,7 +47,7 @@ def parse_args():
     parser.add_argument('--load', type=int, default=0)
     parser.add_argument('--multicore', type=int, default=1, help='whether we use multiprocessing or not in test')
     parser.add_argument('--pretrain', type=int, default=0, help='whether we use pretrained weight or not')
-    parser.add_argument('--seed', type=int, default=2020, help='random seed')
+    parser.add_argument('--seed', type=int, default=2023, help='random seed')
 
     parser.add_argument('--prop_dropout', type=float, default=0.1)
     parser.add_argument('--debug', type=bool, default=True)
@@ -78,11 +68,18 @@ def parse_args():
                         help="the learning rate:0.001")  # 0.001
     parser.add_argument('--dataset', type=str, default='gowalla',
                         help="available datasets: [gowalla,  last-fm, yelp2018, amazon-book]")
-    parser.add_argument('--model', type=str, default='gtn', help='rec-model, support [gnt, lgn]')
+    # parser.add_argument('--model', type=str, default='gtn', help='rec-model, support [gnt, lgn]')
     parser.add_argument('--avg', type=int, default=0)
-    parser.add_argument('--recdim', type=int, default=256,
+    parser.add_argument('--recdim', type=int, default=64,
                         help="the embedding size of GTN: 128, 256")
-    parser.add_argument('--gpu_id', type=int, default=1)
+    parser.add_argument('--gpu_id', type=int, default=0)
     parser.add_argument('--gcn_model', type=str,
                         default='GTN', help='GTN')
+    
+    parser.add_argument('--noise_rate',type=float,default=0,help='add noise at fixed noise ratio')
+    
+    parser.add_argument('--add_noise',type=int,default=0,help='how to add noise')
+
+    parser.add_argument('--model',type=str,default='GTN',help='using which GCN model')
+
     return parser.parse_args()
