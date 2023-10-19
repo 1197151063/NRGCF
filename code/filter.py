@@ -51,7 +51,7 @@ mean_cf = getConfidence(Recmodel)
 fixed_ts = 0.85
 g = dataset.UserItemNet.toarray()
 g = torch.tensor(g)
-g = g.to(world.device)
+# g = g.to(world.device)
 args = world.args
 for i in range(1):
     w = None
@@ -59,10 +59,13 @@ for i in range(1):
     fixed_ts += 0.5
     ts = fixed_ts * mean_cf
     ratings = Recmodel.getUsersRating(users.long())
+    # Recmodel = Recmodel.detach().cpu()
+    ratings = ratings.detach().cpu()
+    torch.cuda.empty_cache()
     adj = torch.multiply(g,ratings)
     adj[adj <= ts] = 0
     adj[adj > ts] = 1
-    adj = adj.detach.cpu().numpy()
+    adj = adj.detach().cpu().numpy()
     dataset_tmp = dataloader.Loader(path=file_path,flag=1,g=adj)
     Recmodel = LightGCN(config,dataset_tmp)
     Recmodel = Recmodel.to(world.device)
