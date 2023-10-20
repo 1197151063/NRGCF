@@ -1,4 +1,4 @@
-##testing whether the code can run
+##this is the script to train a singal model 
 
 from world import cprint,bprint
 from model import GTN,LightGCN,NGCF
@@ -53,3 +53,5 @@ for epoch in range(world.TRAIN_epochs):
         topk_txt = f'Testing EPOCH[{epoch + 1}/{world.TRAIN_epochs}]  {output_information} | Results Top-k (pre, recall, ndcg): {pre}, {recall}, {ndcg}'
         print(topk_txt)
     print(f'EPOCH[{epoch + 1}/{world.TRAIN_epochs}] {output_information} | Results val Top-k (recall, ndcg):  {recall}, {ndcg}')
+
+torch.save(Recmodel.state_dict(),'model_tmp/' + config['model'] + '-' + config['dataset'] + '-' + config['seed'] + '-' + config['noise_rate'] + '.pth.tar')

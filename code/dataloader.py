@@ -94,7 +94,7 @@ class Loader(BasicDataset):
     gowalla dataset,['gowalla', 'yelp2018', 'amazon-book']:
     """
 
-    def __init__(self, config=world.config, path="../data/gowalla", flag=0,g=None):
+    def __init__(self, config=world.config, path="../data/gowalla", flag=0,g=None,hit = 0):
         # train or test
         cprint(f'loading [{path}]')
         self.split = config['A_split']
@@ -135,13 +135,33 @@ class Loader(BasicDataset):
         else:
             with open(train_file) as f:
                 for l in f.readlines():
-                    l = l.strip('\n').split(' ')
-                    uid = int(l[0])
-                    items = np.where(g[uid]==1)
-                    trainUniqueUsers.append(uid)
-                    trainUser.extend([uid] * len(items))
-                    trainItem.extend(items)
-                    self.traindataSize += len(items)
+                    if len(l) > 0:
+                        l = l.strip('\n').split(' ')
+                        uid = int(l[0])
+                        items = np.where(g[uid]==1)
+                        items = items[0].tolist()
+                        trainUniqueUsers.append(uid)
+                        trainUser.extend([uid] * len(items))
+                        trainItem.extend(items)
+                        try:
+                            self.m_item = max(self.m_item, max(items))
+                        except:
+                            continue
+                        self.n_user = max(self.n_user, uid)
+                        self.traindataSize += len(items)
+            n_vnode = hit // self.n_user + 1
+            for i in range(n_vnode):
+                uid = self.n_user + 1
+                items = [j for j in range(self.m_item + 1)]
+                trainUniqueUsers.append(uid)
+                trainUser.extend([uid]*len(items))
+                trainItem.extend(items)
+                self.n_user = max(self.n_user, uid)
+                self.traindataSize += len(items)
+                new_row = np.reshape(np.arange(1, self.m_item + 1), (1, self.m_item))
+                new_row = new_row - 1
+                g = np.vstack((g,new_row)) 
+
             self.trainUniqueUsers = np.array(trainUniqueUsers)
             self.trainUser = np.array(trainUser)
             self.trainItem = np.array(trainItem)
@@ -197,6 +217,7 @@ class Loader(BasicDataset):
 
         if config['add_noise'] == 1 and flag==0:#random noise poison 
             graph = self.UserItemNet.toarray()
+            noise_edge = []
             print(graph.shape)
             nr = config['noise_rate']
             cprint(f'adding noise at noise rate {nr}')
@@ -208,6 +229,8 @@ class Loader(BasicDataset):
                 sample_one = np.random.choice(one_ind[0],maxlen,replace=False)
                 graph[user][sample_zero] = 1
                 graph[user][sample_one] = 0
+                noise_edge.append(sample_one.tolist())
+            self.noise_items = noise_edge
 
             self.UserItemNet = csr_matrix(graph)
         

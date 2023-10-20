@@ -1,3 +1,5 @@
+#using earlystopping to train models 
+
 from world import cprint,bprint
 from model import GTN,LightGCN,NGCF
 import Procedure
