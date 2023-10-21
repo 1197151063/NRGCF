@@ -70,6 +70,7 @@ config['add_noise'] = args.add_noise
 config['noise_rate'] = args.noise_rate
 config['lightGCN_n_layers']= args.layer
 config['model']=args.model 
+config['seed']=args.seed
 
 
 GPU = torch.cuda.is_available()

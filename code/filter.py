@@ -29,7 +29,7 @@ dataset = dataloader.Loader(path=file_path)
 Recmodel = LightGCN(config,dataset)
 Recmodel = Recmodel.to(world.device)
 Recmodel.load_state_dict(torch.load('../Robust-LGCN-gowalla-0.3.pth.tar',map_location=torch.device('cpu')))
-users = torch.tensor(dataset.trainUniqueUsers)
+users = torch.tensor(dataset.testUniqueUsers)
 
 
 
@@ -50,7 +50,7 @@ def getConfidence(Recmodel):
     return mcs
 
 mean_cf = getConfidence(Recmodel)
-fixed_ts = 0.95
+fixed_ts = 0.999
 g = dataset.UserItemNet.toarray()
 g = torch.tensor(g)
 # g = g.to(world.device)

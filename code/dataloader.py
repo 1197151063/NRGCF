@@ -149,18 +149,17 @@ class Loader(BasicDataset):
                             continue
                         self.n_user = max(self.n_user, uid)
                         self.traindataSize += len(items)
-            n_vnode = hit // self.n_user + 1
-            for i in range(n_vnode):
-                uid = self.n_user + 1
-                items = [j for j in range(self.m_item + 1)]
-                trainUniqueUsers.append(uid)
-                trainUser.extend([uid]*len(items))
-                trainItem.extend(items)
-                self.n_user = max(self.n_user, uid)
-                self.traindataSize += len(items)
-                new_row = np.reshape(np.arange(1, self.m_item + 1), (1, self.m_item))
-                new_row = new_row - 1
-                g = np.vstack((g,new_row)) 
+            # n_vnode = hit // self.n_user + 1
+            # for i in range(n_vnode):
+            #     uid = self.n_user + 1
+            #     items = [j for j in range(self.m_item + 1)]
+            #     trainUniqueUsers.append(uid)
+            #     trainUser.extend([uid]*len(items))
+            #     trainItem.extend(items)
+            #     self.n_user = max(self.n_user, uid)
+            #     self.traindataSize += len(items)
+            #     new_row = np.reshape(np.arange(0, self.m_item + 1), (1, self.m_item + 1))
+            #     g = np.vstack((g,new_row)) 
 
             self.trainUniqueUsers = np.array(trainUniqueUsers)
             self.trainUser = np.array(trainUser)

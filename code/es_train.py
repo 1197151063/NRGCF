@@ -45,8 +45,8 @@ Neg_k = 1
 w = None
 
 
-log_file_name = config['model'] + '-' + config['dataset'] + '-' + str(noise_ratio) + '-log.txt'
-save_file_name = model_name + '-' + config['dataset'] + '-' + str(noise_ratio) + '.pth.tar'
+log_file_name = config['model'] + '-' + config['dataset'] + '-' + str(config['seed']) + '-' + str(noise_ratio) + '-log.txt'
+save_file_name = model_name + '-' + config['dataset'] + '-' + str(config['seed']) + '-' + str(noise_ratio) + '.pth.tar'
 best_m1 = 0
 best_m2 = 0
 cprint(f"{model_name} is ready to go with noise ratio: {noise_ratio}")
