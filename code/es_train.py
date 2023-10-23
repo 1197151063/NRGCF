@@ -49,26 +49,28 @@ log_file_name = config['model'] + '-' + config['dataset'] + '-' + str(config['se
 save_file_name = model_name + '-' + config['dataset'] + '-' + str(config['seed']) + '-' + str(noise_ratio) + '.pth.tar'
 best_m1 = 0
 best_m2 = 0
+recloss_tmp = 100
 cprint(f"{model_name} is ready to go with noise ratio: {noise_ratio}")
 print(f"model saved to {save_path}")
 
 with open(log_path+log_file_name,'w') as f:
     for epoch in range(world.TRAIN_epochs):
         if config['model']=='GTN':
-            output_information = Procedure.BPR_train_original(dataset, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
+            rec_loss , output_information = Procedure.BPR_train_original(dataset, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
         else:
-            output_information = Procedure.BPR_train_original_1(dataset, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
+            rec_loss , output_information = Procedure.BPR_train_original_1(dataset, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
         bprint("[TEST]")
         results = Procedure.Test(dataset, Recmodel, epoch, w, world.config['multicore'], val=False)
 
         pre = round(results['precision'][0], 5)
         recall = round(results['recall'][0], 5)
         ndcg = round(results['ndcg'][0], 5)
-        if recall >= best_m1 and ndcg >= best_m2:
+        if recall > best_m1 and ndcg > best_m2 and rec_loss < recloss_tmp:
             bprint('es model selected , best epoch saved')
             torch.save(Recmodel.state_dict(),save_path+save_file_name)
             best_m1 = recall
             best_m2 = ndcg
+            recloss_tmp = rec_loss
         topk_txt = f'Testing EPOCH[{epoch + 1}/{world.TRAIN_epochs}]  {output_information} | Results Top-k (pre, recall, ndcg): {pre}, {recall}, {ndcg}'
         print(topk_txt)
         f.write(topk_txt+'\n')

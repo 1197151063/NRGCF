@@ -75,9 +75,12 @@ for i in range(1):
     for nitems in tqdm(noise_items):
         for item in nitems:
             if adj[rowind][item] <= ts:
-                adj[rowind][item] = 0
                 hit += 1
         rowind += 1
+    interaction_total = dataset.trainDataSize
+    noise_total = interaction_total * config['noise_rate']
+    bprint(f"hitting {hit} noise , hit success rate {hit / noise_total}")
+    adj[adj <= ts] = 0
     adj[adj > ts] = 1
     adj = adj.detach().cpu().numpy()
     # hit = 0
@@ -91,6 +94,9 @@ for i in range(1):
     # bprint(hit)
     # print(adj)
     dataset_tmp = dataloader.Loader(path=file_path,flag=1,g=adj,hit=hit)
+    interaction_filtered = dataset_tmp.trainDataSize
+    removed = interaction_total - interaction_filtered
+    bprint(f"mistake rate {(removed - hit) / interaction_total} ")
     Recmodel = LightGCN(config,dataset_tmp)
     Recmodel = Recmodel.to(world.device)
     best_m1 = 0

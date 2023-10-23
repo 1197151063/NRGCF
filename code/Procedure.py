@@ -67,7 +67,7 @@ def BPR_train_original(dataset, recommend_model, loss_class, epoch, neg_k=1, w=N
     aver_reg_loss = aver_reg_loss / total_batch
     time_info = timer.dict()
     timer.zero()
-    return f"loss {aver_loss:.4f}  {aver_mf_loss:.4f}  {aver_reg_loss:.4f} - {time_info}"
+    return aver_loss , f"loss {aver_loss:.4f}  {aver_mf_loss:.4f}  {aver_reg_loss:.4f} - {time_info}"
 
 def BPR_train_original_1(dataset, recommend_model, loss_class, epoch, neg_k=1, w=None):
     Recmodel = recommend_model
@@ -100,7 +100,7 @@ def BPR_train_original_1(dataset, recommend_model, loss_class, epoch, neg_k=1, w
     aver_loss = aver_loss / total_batch
     time_info = timer.dict()
     timer.zero()
-    return f"loss {aver_loss:.3f}-{time_info}"
+    return aver_loss , f"loss {aver_loss:.3f}-{time_info}"
 def test_one_batch(X):
     sorted_items = X[0].numpy()
     groundTrue = X[1]
