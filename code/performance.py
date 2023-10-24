@@ -20,7 +20,7 @@ utils.set_seed(world.seed)
 print(">>SEED:", world.seed)
 
 
-model_path = 'model_tmp/Robust-LGCN-gowalla-2023-0.5.pth.tar'
+model_path = '/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.2.pth.tar'
 
 dataset = dataloader.Loader(path="../data/" + world.dataset)
 args = world.args

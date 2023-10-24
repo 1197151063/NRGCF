@@ -228,7 +228,7 @@ class Loader(BasicDataset):
                 sample_one = np.random.choice(one_ind[0],maxlen,replace=False)
                 graph[user][sample_zero] = 1
                 graph[user][sample_one] = 0
-                noise_edge.append(sample_one.tolist())
+                noise_edge.append(sample_zero.tolist())
             self.noise_items = noise_edge
 
             self.UserItemNet = csr_matrix(graph)

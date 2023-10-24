@@ -13,8 +13,8 @@ from tqdm import tqdm
 import copy
 from scipy.sparse import csr_matrix
 
-seed = 2023
 config = world.config
+seed = config['seed']
 torch.manual_seed(seed)
 np.random.seed(seed)
 random.seed(seed)
@@ -22,13 +22,14 @@ torch.cuda.manual_seed(seed)
 
 utils.set_seed(world.seed)
 print(">>SEED:", world.seed)
-model_name = 'Robust-' + config['model']
+model_name = 'Denoised-' + config['model'] + '-' + config['dataset'] + '-' + str(config['seed']) +  '-' + str(config['noise_rate']) + '.pth.tar'
 file_path = '../data/gowalla/'
 save_path = '/root/autodl-tmp/models/'
 dataset = dataloader.Loader(path=file_path)
-Recmodel = LightGCN(config,dataset)
+# Recmodel = LightGCN(config,dataset)
+Recmodel = GTN(config,dataset,args = world.args)
 Recmodel = Recmodel.to(world.device)
-Recmodel.load_state_dict(torch.load('../Robust-LGCN-gowalla-0.3.pth.tar',map_location=torch.device('cpu')))
+Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.2.pth.tar',map_location=torch.device('cpu')))
 users = torch.tensor(dataset.testUniqueUsers)
 
 
@@ -50,7 +51,7 @@ def getConfidence(Recmodel):
     return mcs
 
 mean_cf = getConfidence(Recmodel)
-fixed_ts = 0.999
+fixed_ts = 0.95
 g = dataset.UserItemNet.toarray()
 g = torch.tensor(g)
 # g = g.to(world.device)
@@ -93,11 +94,13 @@ for i in range(1):
     #     hit += len(filtered_items.intersection(noisy_items))
     # bprint(hit)
     # print(adj)
+    del dataset
     dataset_tmp = dataloader.Loader(path=file_path,flag=1,g=adj,hit=hit)
     interaction_filtered = dataset_tmp.trainDataSize
     removed = interaction_total - interaction_filtered
-    bprint(f"mistake rate {(removed - hit) / interaction_total} ")
-    Recmodel = LightGCN(config,dataset_tmp)
+    bprint(f"removing {removed} edges , mistake rate {(removed - hit) / interaction_total} ")
+    # Recmodel = LightGCN(config,dataset_tmp)
+    Recmodel = GTN(config,dataset_tmp,args)
     Recmodel = Recmodel.to(world.device)
     best_m1 = 0
     best_m2 = 0
@@ -112,7 +115,7 @@ for i in range(1):
             output_information = Procedure.BPR_train_original(dataset_tmp, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
         else:
             output_information = Procedure.BPR_train_original_1(dataset_tmp, Recmodel, bpr, epoch, neg_k=Neg_k, w=w)
-        if epoch % 10 == 0:
+        if epoch % 5 == 0:
             bprint("[TEST]")
             results = Procedure.Test(dataset_tmp, Recmodel, epoch, w, world.config['multicore'], val=False)
 
@@ -127,4 +130,7 @@ for i in range(1):
         topk_txt = f'Testing EPOCH[{epoch + 1}/{world.TRAIN_epochs}]  {output_information} | Results Top-k (pre, recall, ndcg): {pre}, {recall}, {ndcg}'
         print(topk_txt)
         print(f'EPOCH[{epoch + 1}/{world.TRAIN_epochs}] {output_information} | Results val Top-k (recall, ndcg):  {recall}, {ndcg}')
+    torch.save(Recmodel.state_dict(),save_path + model_name)
+
+
      
