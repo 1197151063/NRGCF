@@ -29,7 +29,7 @@ dataset = dataloader.Loader(path=file_path)
 # Recmodel = LightGCN(config,dataset)
 Recmodel = GTN(config,dataset,args = world.args)
 Recmodel = Recmodel.to(world.device)
-Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.2.pth.tar',map_location=torch.device('cpu')))
+Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.1.pth.tar',map_location=torch.device('cpu')))
 users = torch.tensor(dataset.testUniqueUsers)
 
 
@@ -51,7 +51,7 @@ def getConfidence(Recmodel):
     return mcs
 
 mean_cf = getConfidence(Recmodel)
-fixed_ts = 0.95
+fixed_ts = 0.96
 g = dataset.UserItemNet.toarray()
 g = torch.tensor(g)
 # g = g.to(world.device)
@@ -61,8 +61,8 @@ print(len(noise_items))
 for i in range(1):
     w = None
     Neg_k = 1
-    fixed_ts += 0.05
-    ts = fixed_ts * mean_cf
+    # fixed_ts += 0.05
+    ts = fixed_ts 
     # cprint(mean_cf)
     # bprint(ts)
     ratings = Recmodel.getUsersRating(users.long())
@@ -72,8 +72,10 @@ for i in range(1):
     adj = torch.mul(g,ratings)
     rowind = 0
     hit = 0 
+    noise_total = 0
     bprint("[DENOSING]")
     for nitems in tqdm(noise_items):
+        noise_total += len(nitems)
         for item in nitems:
             if adj[rowind][item] <= ts:
                 hit += 1
