@@ -27,7 +27,7 @@ dataset = dataloader.Loader(path=file_path)
 # Recmodel = LightGCN(config,dataset)
 Recmodel = GTN(config,dataset,args = world.args)
 Recmodel = Recmodel.to(world.device)
-Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.5.pth.tar',map_location=torch.device('cpu')))
+Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.3.pth.tar',map_location=torch.device('cpu')))
 users = torch.tensor(dataset.testUniqueUsers)
 
 

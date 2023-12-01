@@ -26,10 +26,10 @@ model_name = 'Denoised-' + config['model'] + '-' + config['dataset'] + '-' + str
 file_path = '../data/gowalla/'
 save_path = '/root/autodl-tmp/models/'
 dataset = dataloader.Loader(path=file_path)
-# Recmodel = LightGCN(config,dataset)
-Recmodel = GTN(config,dataset,args = world.args)
+Recmodel = LightGCN(config,dataset)
+# Recmodel = GTN(config,dataset,args = world.args)
 Recmodel = Recmodel.to(world.device)
-Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-GTN-gowalla-2023-0.1.pth.tar',map_location=torch.device('cpu')))
+Recmodel.load_state_dict(torch.load('/root/autodl-tmp/models/Robust-LGCN-gowalla-0.3.pth.tar',map_location=torch.device('cpu')))
 users = torch.tensor(dataset.testUniqueUsers)
 
 
@@ -101,8 +101,8 @@ for i in range(1):
     interaction_filtered = dataset_tmp.trainDataSize
     removed = interaction_total - interaction_filtered
     bprint(f"removing {removed} edges , mistake rate {(removed - hit) / interaction_total} ")
-    # Recmodel = LightGCN(config,dataset_tmp)
-    Recmodel = GTN(config,dataset_tmp,args)
+    Recmodel = LightGCN(config,dataset_tmp)
+    # Recmodel = GTN(config,dataset_tmp,args)
     Recmodel = Recmodel.to(world.device)
     best_m1 = 0
     best_m2 = 0
