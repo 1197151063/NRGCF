@@ -1,0 +1,14 @@
+Epoch: 001, aver_loss : 0.31861, R@20: 0.0114, N@20: 0.0092, time:12.94 seconds
+Epoch: 002, aver_loss : 0.15885, R@20: 0.0119, N@20: 0.0096, time:12.92 seconds
+Epoch: 003, aver_loss : 0.14862, R@20: 0.0123, N@20: 0.0099, time:12.92 seconds
+Epoch: 004, aver_loss : 0.14289, R@20: 0.0127, N@20: 0.0102, time:12.91 seconds
+Epoch: 005, aver_loss : 0.13772, R@20: 0.0128, N@20: 0.0103, time:12.92 seconds
+Epoch: 006, aver_loss : 0.13321, R@20: 0.0126, N@20: 0.0101, time:12.93 seconds
+Epoch: 007, aver_loss : 0.12833, R@20: 0.0130, N@20: 0.0103, time:12.92 seconds
+Epoch: 008, aver_loss : 0.12397, R@20: 0.0135, N@20: 0.0106, time:12.93 seconds
+Epoch: 009, aver_loss : 0.11951, R@20: 0.0135, N@20: 0.0107, time:12.92 seconds
+Epoch: 010, aver_loss : 0.11427, R@20: 0.0135, N@20: 0.0108, time:12.92 seconds
+Epoch: 011, aver_loss : 0.11066, R@20: 0.0137, N@20: 0.0109, time:12.93 seconds
+Epoch: 012, aver_loss : 0.10674, R@20: 0.0141, N@20: 0.0113, time:12.92 seconds
+Epoch: 013, aver_loss : 0.10426, R@20: 0.0143, N@20: 0.0114, time:12.92 seconds
+Epoch: 014, aver_loss : 0.10070, R@20: 0.0144, N@20: 0.0114, time:12.93 seconds

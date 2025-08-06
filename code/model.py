@@ -68,8 +68,8 @@ class RecModel(MessagePassing):
                         src_index:Tensor=None,
                         dst_index:Tensor=None):
         out_u,out_i = self.forward(edge_index=self.edge_index)
-        out_u = F.normalize(out_u, dim=-1)
-        out_i = F.normalize(out_i, dim=-1)
+        # out_u = F.normalize(out_u, dim=-1)
+        # out_i = F.normalize(out_i, dim=-1)
         if src_index is None:
             src_index = torch.arange(self.num_users).long()
         if dst_index is None:
@@ -220,10 +220,10 @@ class NRGCF(RecModel):
     
     def cross_norm(self,x):
         users,items = torch.split(x,[self.num_users,self.num_items])
-        users_norm = (1e-6 + users.pow(2).sum(dim=1).mean()).sqrt()
-        items_norm = (1e-6 + items.pow(2).sum(dim=1).mean()).sqrt()
-        users = users / (items_norm)
-        items = items / (users_norm)
+        users_norm = (1e-6 + users.pow(2).sum(dim=1).mean())
+        items_norm = (1e-6 + items.pow(2).sum(dim=1).mean())
+        users = users / (items_norm ** 0.8)
+        items = items / (users_norm ** 0.8)
         x = torch.cat([users,items])
         return x
         

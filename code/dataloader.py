@@ -91,7 +91,6 @@ class Loader(Dataset):
     
     def get_edge_weights(self,edge_index):
         user_degree = degree(edge_index[0])
-        item_degree = degree(edge_index[1])
         sampling_weight = 1 / (user_degree[edge_index[0]] + 1)
         return sampling_weight
 
