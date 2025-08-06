@@ -33,5 +33,7 @@ def parse_args():
 
     parser.add_argument('--tau', type=float, default=0.1,
                         help="the temperature for softmax in loss function")  # 0.1
+    parser.add_argument('--lambda_', type=float, default=1,
+                        help="the lambda for cross norm in loss function")  # 0.5
 
     return parser.parse_args()

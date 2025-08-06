@@ -217,13 +217,14 @@ class NRGCF(RecModel):
         super().__init__(num_users,num_items,config,edge_index)
         self.edge_index = self.get_sparse_graph(edge_index, use_value=False)
         self.edge_index = gcn_norm(self.edge_index)
+        self.lambda_ = config['lambda']
     
     def cross_norm(self,x):
         users,items = torch.split(x,[self.num_users,self.num_items])
-        users_norm = (1e-6 + users.pow(2).sum(dim=1).mean())
-        items_norm = (1e-6 + items.pow(2).sum(dim=1).mean())
-        users = users / (items_norm ** 0.8)
-        items = items / (users_norm ** 0.8)
+        users_norm = (1e-6 + users.pow(2).sum(dim=1).mean()).sqrt()
+        items_norm = (1e-6 + items.pow(2).sum(dim=1).mean()).sqrt()
+        users = users / (items_norm)
+        items = items / (users_norm)
         x = torch.cat([users,items])
         return x
         
@@ -234,7 +235,8 @@ class NRGCF(RecModel):
         out = [x]
         for i in range(self.config['K']):
             x = self.propagate(edge_index, x=x)
-            x = self.cross_norm(x)
+            x_c = self.cross_norm(x)
+            x = self.lambda_ * x_c + (1 - self.lambda_) * x
             out.append(x)
         out = torch.stack(out, dim=1)
         out = out.mean(dim=1)

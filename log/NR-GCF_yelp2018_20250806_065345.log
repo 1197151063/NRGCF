@@ -7,3 +7,5 @@ Epoch: 006, aver_loss : 0.04568, R@20: 0.0572, N@20: 0.0473, time:17.89 seconds
 Epoch: 007, aver_loss : 0.04246, R@20: 0.0584, N@20: 0.0481, time:17.88 seconds
 Epoch: 008, aver_loss : 0.03984, R@20: 0.0577, N@20: 0.0477, time:17.88 seconds
 Epoch: 009, aver_loss : 0.03811, R@20: 0.0583, N@20: 0.0480, time:17.89 seconds
+Epoch: 010, aver_loss : 0.03665, R@20: 0.0562, N@20: 0.0463, time:17.91 seconds
+Epoch: 011, aver_loss : 0.03455, R@20: 0.0570, N@20: 0.0473, time:17.90 seconds

@@ -10,12 +10,12 @@ from utils import init_logger, print_log, write_final_log
 
 if world.config['dataset'] == 'yelp2018':
     config = {
-        'init':'uniform',#NORMAL DISTRIBUTION
+        'init':'normal',#NORMAL DISTRIBUTION
         'init_weight':world.init_weight,#INIT WEIGHT
         'dim':64,#EMBEDDING_SIZE
         'decay':world.decay,#L2_NORM
         'K':3,
-        'tau':world.tau,
+        'lambda': world.lambda_,
         'lr':world.lr,#LEARNING_RATE
         'num_neg':world.num_neg,
         'dropout':world.dropout_rate,#DROPOUT_RATE

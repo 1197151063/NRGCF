@@ -5,7 +5,6 @@ args = parse_args()
 
 config = {}
 config['bpr_batch_size'] = args.bpr_batch
-
 config['K'] = args.K
 
 config['test_u_batch_size'] = args.testbatch
@@ -36,6 +35,7 @@ tau = args.tau
 
 init_weight = args.init_weight
 
+lambda_ = args.lambda_
 lr = args.lr
 flag = 0
 def cprint(words: str):
