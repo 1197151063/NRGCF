@@ -1,0 +1,43 @@
+Epoch: 001, aver_loss : 0.23111, R@20: 0.0575, N@20: 0.0253, time:80.73 seconds
+Epoch: 002, aver_loss : 0.14349, R@20: 0.0711, N@20: 0.0316, time:80.72 seconds
+Epoch: 003, aver_loss : 0.09838, R@20: 0.0806, N@20: 0.0362, time:80.72 seconds
+Epoch: 004, aver_loss : 0.06002, R@20: 0.0845, N@20: 0.0387, time:80.71 seconds
+Epoch: 005, aver_loss : 0.03939, R@20: 0.0863, N@20: 0.0399, time:80.72 seconds
+Epoch: 006, aver_loss : 0.02785, R@20: 0.0864, N@20: 0.0403, time:80.72 seconds
+Epoch: 007, aver_loss : 0.02056, R@20: 0.0858, N@20: 0.0401, time:80.72 seconds
+Epoch: 008, aver_loss : 0.01695, R@20: 0.0838, N@20: 0.0394, time:80.72 seconds
+Epoch: 009, aver_loss : 0.01420, R@20: 0.0819, N@20: 0.0385, time:80.72 seconds
+Epoch: 010, aver_loss : 0.01184, R@20: 0.0805, N@20: 0.0379, time:80.72 seconds
+Epoch: 011, aver_loss : 0.01068, R@20: 0.0789, N@20: 0.0370, time:80.72 seconds
+Epoch: 012, aver_loss : 0.00951, R@20: 0.0768, N@20: 0.0361, time:80.72 seconds
+Epoch: 013, aver_loss : 0.00911, R@20: 0.0748, N@20: 0.0354, time:80.72 seconds
+Epoch: 014, aver_loss : 0.00843, R@20: 0.0735, N@20: 0.0347, time:80.72 seconds
+Epoch: 015, aver_loss : 0.00782, R@20: 0.0725, N@20: 0.0343, time:80.72 seconds
+Epoch: 016, aver_loss : 0.00741, R@20: 0.0712, N@20: 0.0337, time:80.72 seconds
+Epoch: 017, aver_loss : 0.00710, R@20: 0.0705, N@20: 0.0333, time:80.72 seconds
+Epoch: 018, aver_loss : 0.00680, R@20: 0.0696, N@20: 0.0328, time:80.72 seconds
+Epoch: 019, aver_loss : 0.00656, R@20: 0.0682, N@20: 0.0321, time:80.72 seconds
+Epoch: 020, aver_loss : 0.00634, R@20: 0.0676, N@20: 0.0318, time:80.72 seconds
+Epoch: 021, aver_loss : 0.00614, R@20: 0.0664, N@20: 0.0312, time:80.72 seconds
+Epoch: 022, aver_loss : 0.00595, R@20: 0.0656, N@20: 0.0309, time:80.72 seconds
+Epoch: 023, aver_loss : 0.00589, R@20: 0.0650, N@20: 0.0305, time:80.73 seconds
+Epoch: 024, aver_loss : 0.00552, R@20: 0.0642, N@20: 0.0303, time:80.72 seconds
+Epoch: 025, aver_loss : 0.00546, R@20: 0.0635, N@20: 0.0299, time:80.72 seconds
+Epoch: 026, aver_loss : 0.00535, R@20: 0.0624, N@20: 0.0295, time:80.72 seconds
+
+========== BEST RESULT ==========
+Best Epoch: 6
+Recall@20: 0.0864, NDCG@20: 0.0403
+Config:
+{
+  "init": "normal",
+  "init_weight": 0.01,
+  "dim": 64,
+  "decay": 0.001,
+  "K": 3,
+  "lambda": 0.4,
+  "lr": 0.0005,
+  "num_neg": 64,
+  "dropout": 0.1
+}
+Log saved to: ../log/NR-GCF_iFashion_20250806_134958.log

@@ -7,6 +7,8 @@ from torch_geometric.nn.conv.gcn_conv import gcn_norm
 import torch.nn.functional as F
 import torch
 import world
+from utils import dropout_node_bipartite
+from torch_geometric.utils import dropout_edge,dropout_path,bipartite_subgraph
 device = world.device
 
 
@@ -206,8 +208,8 @@ class LightGCN(RecModel):
     def get_loss(self,edge_label_index):
         rank_loss = self.bpr_loss(edge_label_index) + self.l2_reg(edge_label_index)
         return rank_loss 
-        
 
+    
 class NRGCF(RecModel):
     def __init__(self,
                  num_users:int,
@@ -247,3 +249,99 @@ class NRGCF(RecModel):
     def get_loss(self,edge_label_index):
         rank_loss = self.bpr_loss(edge_label_index) + self.l2_reg(edge_label_index)
         return rank_loss 
+    
+class NRGCL(RecModel):
+    #InfoNCE + NRGCF
+    def __init__(self,
+                 num_users:int,
+                 num_items:int,
+                 config,
+                 edge_index:LongTensor):
+        super().__init__(num_users,num_items,config,edge_index)
+        self.edge_index1 = None
+        self.edge_index2 = None
+        self.generate_graph(edge_index)
+        self.edge_index = self.get_sparse_graph(edge_index, use_value=False)
+        self.edge_index = gcn_norm(self.edge_index)
+        self.ssl_tmp = config['ssl_tmp']
+        self.ssl_decay = config['ssl_decay']
+        self.aug_type = config['type']
+        
+    
+    def forward(self,edge_index:SparseTensor):
+        user_emb = self.user_embedding.weight
+        item_emb = self.item_embedding.weight
+        x = torch.cat([user_emb, item_emb], dim=0)
+        out = [x]
+        for i in range(self.config['K']):
+            x = self.propagate(edge_index, x=x)
+            out.append(x)
+        out = torch.stack(out, dim=1)
+        out = out.mean(dim=1)
+        user_emb = out[:self.num_users]
+        item_emb = out[self.num_users:]
+        return user_emb, item_emb
+    
+    def generate_graph(self,edge_index:LongTensor):
+        if self.config['aug_type'] == 'ED':
+            self.edge_index1,_ = dropout_edge(edge_index=edge_index,
+                                         p=self.config['drop_ratio'])
+            self.edge_index2,_ = dropout_edge(edge_index=edge_index,
+                                         p=self.config['drop_ratio'])
+        if self.config['aug_type'] == 'ND':
+            self.edge_index1 = dropout_node_bipartite(edge_index=edge_index,
+                                                 num_users=self.num_users,
+                                                 num_items=self.num_items,
+                                                 p=self.config['drop_ratio']/2)
+            self.edge_index2 = dropout_node_bipartite(edge_index=edge_index,
+                                                 num_users=self.num_users,
+                                                 num_items=self.num_items,
+                                                 p=self.config['drop_ratio']/2)
+        if self.config['aug_type'] == 'RW':
+            self.edge_index1,_ = dropout_path(edge_index=edge_index,
+                                         p=self.config['drop_ratio'])
+            self.edge_index2,_ = dropout_path(edge_index=edge_index,
+                                         p=self.config['drop_ratio'])
+        self.edge_index1 = self.get_sparse_graph(self.edge_index1, use_value=False)
+        self.edge_index2 = self.get_sparse_graph(self.edge_index2, use_value=False)
+        self.edge_index1 = gcn_norm(self.edge_index1)
+        self.edge_index2 = gcn_norm(self.edge_index2)
+    def InfoNCE(self,
+                edge_label_index:LongTensor):
+        info_out_u_1,info_out_i_1 = self.forward(edge_index=self.edge_index1)
+        info_out_u_2,info_out_i_2 = self.forward(edge_index=self.edge_index2)
+        u_idx = torch.unique(edge_label_index[0])
+        i_idx = torch.unique(edge_label_index[1])
+        info_out_u1 = info_out_u_1[u_idx]
+        info_out_u2 = info_out_u_2[u_idx]
+        info_out_i1 = info_out_i_1[i_idx]
+        info_out_i2 = info_out_i_2[i_idx]
+        info_out_u1 = F.normalize(info_out_u1,dim=1)
+        info_out_u2 = F.normalize(info_out_u2,dim=1)
+        info_out_u_2 = F.normalize(info_out_u_2,dim=1)
+        info_out_i_2 = F.normalize(info_out_i_2,dim=1)
+        info_pos_user = (info_out_u1 * info_out_u2).sum(dim=1)/ self.ssl_tmp
+        info_pos_user = torch.exp(info_pos_user)
+        info_neg_user = (info_out_u1 @ info_out_u_2.t())/ self.ssl_tmp
+        info_neg_user = torch.exp(info_neg_user)
+        info_neg_user = torch.sum(info_neg_user,dim=1,keepdim=True)
+        info_neg_user = info_neg_user.T
+        ssl_logits_user = -torch.log(info_pos_user / info_neg_user).mean()
+        info_out_i1 = F.normalize(info_out_i1,dim=1)
+        info_out_i2 = F.normalize(info_out_i2,dim=1)
+        info_pos_item = (info_out_i1 * info_out_i2).sum(dim=1)/ self.ssl_tmp
+        info_neg_item = (info_out_i1 @ info_out_i_2.t())/ self.ssl_tmp
+        info_pos_item = torch.exp(info_pos_item)
+        info_neg_item = torch.exp(info_neg_item)
+        info_neg_item = torch.sum(info_neg_item,dim=1,keepdim=True)
+        info_neg_item = info_neg_item.T
+        ssl_logits_item = -torch.log(info_pos_item / info_neg_item).mean()
+        return self.ssl_decay * (ssl_logits_user + ssl_logits_item)
+
+    def get_loss(self, edge_label_index):
+        return self.bpr_loss(edge_label_index) + self.l2_reg(edge_label_index) + self.InfoNCE(edge_label_index)
+
+            
+
+    
+    

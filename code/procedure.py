@@ -1,10 +1,7 @@
 import torch
-from torch import Tensor
-import numpy as np
 from torch_geometric.utils import degree
 import world
 import utils
-import multiprocessing
 from model import RecModel
 device = world.device
 config = world.config
