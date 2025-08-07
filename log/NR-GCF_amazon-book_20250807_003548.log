@@ -236,3 +236,8 @@ Epoch: 235, aver_loss : 0.02945, R@20: 0.0367, N@20: 0.0288, time:83.43 seconds
 Epoch: 236, aver_loss : 0.02920, R@20: 0.0369, N@20: 0.0288, time:83.43 seconds
 Epoch: 237, aver_loss : 0.02893, R@20: 0.0367, N@20: 0.0288, time:83.42 seconds
 Epoch: 238, aver_loss : 0.02900, R@20: 0.0369, N@20: 0.0289, time:83.42 seconds
+Epoch: 239, aver_loss : 0.02902, R@20: 0.0369, N@20: 0.0289, time:83.46 seconds
+Epoch: 240, aver_loss : 0.02884, R@20: 0.0367, N@20: 0.0289, time:83.42 seconds
+Epoch: 241, aver_loss : 0.02878, R@20: 0.0368, N@20: 0.0288, time:83.43 seconds
+Epoch: 242, aver_loss : 0.02863, R@20: 0.0367, N@20: 0.0288, time:83.42 seconds
+Epoch: 243, aver_loss : 0.02865, R@20: 0.0369, N@20: 0.0289, time:83.44 seconds

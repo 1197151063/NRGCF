@@ -56,7 +56,7 @@ max_score = 0.
 log_path = init_logger(model_name='NR-GCF_InfoNCE', dataset_name=world.config['dataset'])
 for epoch in range(1, 1001):
     start_time = time.time()
-    model.generate_graph()
+    model.generate_graph(train_edge_index)
     loss = train(dataset=dataset,model=model,opt=opt)
     end_time = time.time()
     recall,ndcg = test([20],model,train_edge_index,test_edge_index,num_users)

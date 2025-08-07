@@ -293,12 +293,12 @@ class NRGCL(RecModel):
         return user_emb, item_emb
     
     def generate_graph(self,edge_index:LongTensor):
-        if self.config['aug_type'] == 'ED':
+        if self.aug_type == 'ED':
             self.edge_index1,_ = dropout_edge(edge_index=edge_index,
                                          p=self.config['drop_ratio'])
             self.edge_index2,_ = dropout_edge(edge_index=edge_index,
                                          p=self.config['drop_ratio'])
-        if self.config['aug_type'] == 'ND':
+        if self.aug_type == 'ND':
             self.edge_index1 = dropout_node_bipartite(edge_index=edge_index,
                                                  num_users=self.num_users,
                                                  num_items=self.num_items,
@@ -307,7 +307,7 @@ class NRGCL(RecModel):
                                                  num_users=self.num_users,
                                                  num_items=self.num_items,
                                                  p=self.config['drop_ratio']/2)
-        if self.config['aug_type'] == 'RW':
+        if self.aug_type == 'RW':
             self.edge_index1,_ = dropout_path(edge_index=edge_index,
                                          p=self.config['drop_ratio'])
             self.edge_index2,_ = dropout_path(edge_index=edge_index,
@@ -316,6 +316,7 @@ class NRGCL(RecModel):
         self.edge_index2 = self.get_sparse_graph(self.edge_index2, use_value=False)
         self.edge_index1 = gcn_norm(self.edge_index1)
         self.edge_index2 = gcn_norm(self.edge_index2)
+        
     def InfoNCE(self,
                 edge_label_index:LongTensor):
         info_out_u_1,info_out_i_1 = self.forward(edge_index=self.edge_index1)
