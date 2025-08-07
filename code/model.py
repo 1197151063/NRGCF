@@ -260,12 +260,12 @@ class NRGCL(RecModel):
         super().__init__(num_users,num_items,config,edge_index)
         self.edge_index1 = None
         self.edge_index2 = None
+        self.aug_type = config['type']
         self.generate_graph(edge_index)
         self.edge_index = self.get_sparse_graph(edge_index, use_value=False)
         self.edge_index = gcn_norm(self.edge_index)
         self.ssl_tmp = config['ssl_tmp']
         self.ssl_decay = config['ssl_decay']
-        self.aug_type = config['type']
         self.lambda_ = config['lambda']
         
     def cross_norm(self,x):
@@ -316,7 +316,7 @@ class NRGCL(RecModel):
         self.edge_index2 = self.get_sparse_graph(self.edge_index2, use_value=False)
         self.edge_index1 = gcn_norm(self.edge_index1)
         self.edge_index2 = gcn_norm(self.edge_index2)
-        
+
     def InfoNCE(self,
                 edge_label_index:LongTensor):
         info_out_u_1,info_out_i_1 = self.forward(edge_index=self.edge_index1)
