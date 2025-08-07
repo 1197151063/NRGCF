@@ -266,8 +266,16 @@ class NRGCL(RecModel):
         self.ssl_tmp = config['ssl_tmp']
         self.ssl_decay = config['ssl_decay']
         self.aug_type = config['type']
+        self.lambda_ = config['lambda']
         
-    
+    def cross_norm(self,x):
+        users,items = torch.split(x,[self.num_users,self.num_items])
+        users_norm = (1e-6 + users.pow(2).sum(dim=1).mean()).sqrt()
+        items_norm = (1e-6 + items.pow(2).sum(dim=1).mean()).sqrt()
+        users = users / (items_norm)
+        items = items / (users_norm)
+        x = torch.cat([users,items])
+        return x
     def forward(self,edge_index:SparseTensor):
         user_emb = self.user_embedding.weight
         item_emb = self.item_embedding.weight
@@ -275,6 +283,8 @@ class NRGCL(RecModel):
         out = [x]
         for i in range(self.config['K']):
             x = self.propagate(edge_index, x=x)
+            x_c = self.cross_norm(x)
+            x = self.lambda_ * x_c + (1 - self.lambda_) * x
             out.append(x)
         out = torch.stack(out, dim=1)
         out = out.mean(dim=1)

@@ -12,6 +12,7 @@ if world.config['dataset'] == 'yelp2018':
         'init':'normal',#NORMAL DISTRIBUTION
         'init_weight':0.01,#INIT WEIGHT
         'K':3,#GCN_LAYER
+        'lambda': world.lambda_,
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
@@ -26,6 +27,7 @@ if world.config['dataset'] == 'amazon-book':
         'init':'normal',#NORMAL DISTRIBUTION
         'init_weight':0.01,#INIT WEIGHT
         'K':3,#GCN_LAYER
+        'lambda': world.lambda_,
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
