@@ -41,35 +41,8 @@ if world.config['dataset'] == 'amazon-book':
         'prune_threshold': 0.1
     }
 
-if world.config['dataset'] == 'gowalla':
-    config = {
-        'init':'noraml',#NORMAL DISTRIBUTION
-        'init_weight':0.01,#INIT WEIGHT
-        'K':4,#GCN_LAYER
-        'dim':64,#EMBEDDING_SIZE
-        'decay':1e-4,#L2_NORM
-        'lr':4e-5,#LEARNING_RATE
-        'seed':0,#RANDOM_SEED
-        'ssl_tmp':0.5,#TEMPERATURE
-        'ssl_decay':1e-6,#SSL_STRENGTH
-        'aug_ratio':0.1,#ADDING EDGE RATIO
-        'prune_threshold': 0.1
-    }
+
     
-if world.config['dataset'] == 'iFashion':
-    config = {
-        'init':'uniform',#NORMAL DISTRIBUTION
-        'init_weight':1,#INIT WEIGHT
-        'K':3,#GCN_LAYER
-        'dim':64,#EMBEDDING_SIZE
-        'decay':1e-3,#L2_NORM
-        'lr':4e-5,#LEARNING_RATE
-        'seed':0,#RANDOM_SEED
-        'ssl_tmp':0.2,#TEMPERATURE
-        'ssl_decay':3e-5,#SSL_STRENGTH
-        'aug_ratio':0.1,#ADDING EDGE RATIO
-        'prune_threshold': 0.1
-    }
 
 
 class RGCF(RecModel):

@@ -23,30 +23,18 @@ if world.config['dataset'] == 'yelp2018':
 
 if world.config['dataset'] == 'amazon-book':
     config = {
-        'init':'uniform',#NORMAL DISTRIBUTION
+        'init':'normal',#NORMAL DISTRIBUTION
         'init_weight':world.init_weight,#INIT WEIGHT
         'dim':64,#EMBEDDING_SIZE
         'decay':world.decay,#L2_NORM
-        'K':1,
-        'tau':world.tau,
+        'K':3,
+        'lambda': world.lambda_,
         'lr':world.lr,#LEARNING_RATE
         'num_neg':world.num_neg,
         'dropout':world.dropout_rate,#DROPOUT_RATE
     }
 
 
-if world.config['dataset'] == 'iFashion':
-    config = {
-        'init':'uniform',#NORMAL DISTRIBUTION
-        'init_weight':0.5,#INIT WEIGHT
-        'dim':64,#EMBEDDING_SIZE
-        'decay':1e-4,#L2_NORM
-        'tau':0.16,#TEMPERATURE
-        'K':1,
-        'lr':1e-4,#LEARNING_RATE
-        'num_neg':64,
-        'dropout':world.dropout_rate,#DROPOUT_RATE
-    }
 
     
 
