@@ -81,6 +81,8 @@ class RecModel(MessagePassing):
         pred = out_src @ out_dst.t()
         return pred
     
+
+    
     def get_sparse_bipartite_graph_transpose(self,
                                              edge_index:LongTensor,
                                              use_value=False,
@@ -220,6 +222,8 @@ class NRGCF(RecModel):
         self.edge_index = self.get_sparse_graph(edge_index, use_value=False)
         self.edge_index = gcn_norm(self.edge_index)
         self.lambda_ = config['lambda']
+        self.momentum_loss = torch.zeros(edge_index.size(1)).to(device)
+
     
     def cross_norm(self,x):
         users,items = torch.split(x,[self.num_users,self.num_items])
@@ -250,8 +254,32 @@ class NRGCF(RecModel):
         rank_loss = self.bpr_loss(edge_label_index) + self.l2_reg(edge_label_index)
         return rank_loss 
     
+    @torch.no_grad()
+    def get_instance_loss(self,edge_label_index:LongTensor):
+        user_emb,item_emb = self.forward(edge_index=self.edge_index)
+        user_emb = user_emb[edge_label_index[0]]
+        pos_item_emb = item_emb[edge_label_index[1]]
+        neg_item_emb = item_emb[edge_label_index[2]]
+        pos_rank = (user_emb * pos_item_emb).sum(dim=-1)
+        neg_rank = (user_emb * neg_item_emb).sum(dim=-1)
+        return F.softplus(neg_rank - pos_rank)
+    
+    @torch.no_grad()
+    def update_momentum(self, index, instance_loss:torch.Tensor, epoch:int):
+        """
+        \mathcal{L}^h_{i,0} = \mathcal{L}_{i,0}
+        \mathcal{L}^h_{i,t} = (t/T) * \mathcal{L}^h_{i,t-1} + (1 - t/T) * \mathcal{L}_{i,t}
+        """
+        if epoch == 0:
+            self.momentum_loss[index] = instance_loss 
+        else:
+            w = epoch / 10 
+            prev = self.momentum_loss[index]
+            self.momentum_loss[index] = w * prev + (1.0 - w) * instance_loss
+
 class NRGCL(RecModel):
     #InfoNCE + NRGCF
+    #We use SGL as baseline to implement NR-GCL
     def __init__(self,
                  num_users:int,
                  num_items:int,
@@ -267,6 +295,8 @@ class NRGCL(RecModel):
         self.ssl_tmp = config['ssl_tmp']
         self.ssl_decay = config['ssl_decay']
         self.lambda_ = config['lambda']
+        self.momentum_loss = torch.zeros(edge_index.size(1)).to(device)
+
         
     def cross_norm(self,x):
         users,items = torch.split(x,[self.num_users,self.num_items])
@@ -316,7 +346,7 @@ class NRGCL(RecModel):
         self.edge_index2 = self.get_sparse_graph(self.edge_index2, use_value=False)
         self.edge_index1 = gcn_norm(self.edge_index1)
         self.edge_index2 = gcn_norm(self.edge_index2)
-
+        
     def InfoNCE(self,
                 edge_label_index:LongTensor):
         info_out_u_1,info_out_i_1 = self.forward(edge_index=self.edge_index1)

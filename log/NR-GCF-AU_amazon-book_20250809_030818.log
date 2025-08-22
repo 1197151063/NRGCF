@@ -1,0 +1,38 @@
+Epoch: 001, aver_loss : -6.65795, R@20: 0.0457, N@20: 0.0362, time:576.03 seconds
+Epoch: 002, aver_loss : -6.70908, R@20: 0.0453, N@20: 0.0359, time:576.08 seconds
+Epoch: 003, aver_loss : -6.71587, R@20: 0.0452, N@20: 0.0358, time:576.09 seconds
+Epoch: 004, aver_loss : -6.72015, R@20: 0.0448, N@20: 0.0356, time:576.09 seconds
+Epoch: 005, aver_loss : -6.72334, R@20: 0.0448, N@20: 0.0356, time:576.11 seconds
+Epoch: 006, aver_loss : -6.72589, R@20: 0.0448, N@20: 0.0355, time:576.13 seconds
+Epoch: 007, aver_loss : -6.72775, R@20: 0.0450, N@20: 0.0357, time:576.15 seconds
+Epoch: 008, aver_loss : -6.72929, R@20: 0.0449, N@20: 0.0355, time:576.18 seconds
+Epoch: 009, aver_loss : -6.73062, R@20: 0.0449, N@20: 0.0356, time:576.14 seconds
+Epoch: 010, aver_loss : -6.73174, R@20: 0.0449, N@20: 0.0356, time:576.08 seconds
+Epoch: 011, aver_loss : -6.73260, R@20: 0.0449, N@20: 0.0356, time:576.17 seconds
+Epoch: 012, aver_loss : -6.73345, R@20: 0.0449, N@20: 0.0356, time:576.12 seconds
+Epoch: 013, aver_loss : -6.73409, R@20: 0.0447, N@20: 0.0355, time:576.12 seconds
+Epoch: 014, aver_loss : -6.73476, R@20: 0.0448, N@20: 0.0355, time:576.10 seconds
+Epoch: 015, aver_loss : -6.73532, R@20: 0.0448, N@20: 0.0355, time:576.19 seconds
+Epoch: 016, aver_loss : -6.73586, R@20: 0.0448, N@20: 0.0355, time:576.15 seconds
+Epoch: 017, aver_loss : -6.73634, R@20: 0.0448, N@20: 0.0356, time:576.28 seconds
+Epoch: 018, aver_loss : -6.73679, R@20: 0.0450, N@20: 0.0357, time:576.13 seconds
+Epoch: 019, aver_loss : -6.73715, R@20: 0.0449, N@20: 0.0357, time:576.13 seconds
+Epoch: 020, aver_loss : -6.73752, R@20: 0.0451, N@20: 0.0357, time:576.07 seconds
+Epoch: 021, aver_loss : -6.73782, R@20: 0.0450, N@20: 0.0357, time:576.19 seconds
+
+========== BEST RESULT ==========
+Best Epoch: 1
+Recall@20: 0.0457, NDCG@20: 0.0362
+Config:
+{
+  "init": "normal",
+  "init_weight": 0.01,
+  "dim": 64,
+  "decay": 0.0001,
+  "K": 3,
+  "lambda": 0.5,
+  "lr": 0.0005,
+  "num_neg": 64,
+  "dropout": 0.1
+}
+Log saved to: ../log/NR-GCF-AU_amazon-book_20250809_030818.log

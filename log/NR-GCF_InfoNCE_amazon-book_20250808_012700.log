@@ -1,0 +1,60 @@
+Epoch: 001, aver_loss : 7.05064, R@20: 0.0022, N@20: 0.0016, time:109.86 seconds
+Epoch: 002, aver_loss : 7.01791, R@20: 0.0015, N@20: 0.0011, time:110.17 seconds
+Epoch: 003, aver_loss : 7.01356, R@20: 0.0014, N@20: 0.0011, time:110.10 seconds
+Epoch: 004, aver_loss : 7.01100, R@20: 0.0018, N@20: 0.0014, time:110.03 seconds
+Epoch: 005, aver_loss : 7.00896, R@20: 0.0025, N@20: 0.0020, time:110.03 seconds
+Epoch: 006, aver_loss : 7.00609, R@20: 0.0040, N@20: 0.0032, time:110.12 seconds
+Epoch: 007, aver_loss : 6.99953, R@20: 0.0052, N@20: 0.0041, time:110.08 seconds
+Epoch: 008, aver_loss : 6.98860, R@20: 0.0065, N@20: 0.0051, time:110.12 seconds
+Epoch: 009, aver_loss : 6.97202, R@20: 0.0105, N@20: 0.0086, time:110.21 seconds
+Epoch: 010, aver_loss : 6.92686, R@20: 0.0199, N@20: 0.0163, time:110.15 seconds
+Epoch: 011, aver_loss : 6.83411, R@20: 0.0303, N@20: 0.0247, time:110.28 seconds
+Epoch: 012, aver_loss : 6.72947, R@20: 0.0379, N@20: 0.0306, time:110.28 seconds
+Epoch: 013, aver_loss : 6.64172, R@20: 0.0434, N@20: 0.0345, time:110.26 seconds
+Epoch: 014, aver_loss : 6.57582, R@20: 0.0462, N@20: 0.0365, time:110.25 seconds
+Epoch: 015, aver_loss : 6.52845, R@20: 0.0476, N@20: 0.0374, time:110.25 seconds
+Epoch: 016, aver_loss : 6.49434, R@20: 0.0483, N@20: 0.0379, time:110.18 seconds
+Epoch: 017, aver_loss : 6.46907, R@20: 0.0487, N@20: 0.0382, time:110.21 seconds
+Epoch: 018, aver_loss : 6.45034, R@20: 0.0490, N@20: 0.0384, time:110.06 seconds
+Epoch: 019, aver_loss : 6.43554, R@20: 0.0492, N@20: 0.0385, time:110.20 seconds
+Epoch: 020, aver_loss : 6.42394, R@20: 0.0494, N@20: 0.0387, time:110.12 seconds
+Epoch: 021, aver_loss : 6.41467, R@20: 0.0492, N@20: 0.0385, time:110.15 seconds
+Epoch: 022, aver_loss : 6.40702, R@20: 0.0491, N@20: 0.0384, time:110.13 seconds
+Epoch: 023, aver_loss : 6.40074, R@20: 0.0490, N@20: 0.0383, time:110.20 seconds
+Epoch: 024, aver_loss : 6.39550, R@20: 0.0488, N@20: 0.0382, time:110.38 seconds
+Epoch: 025, aver_loss : 6.39102, R@20: 0.0486, N@20: 0.0380, time:110.31 seconds
+Epoch: 026, aver_loss : 6.38745, R@20: 0.0481, N@20: 0.0377, time:110.26 seconds
+Epoch: 027, aver_loss : 6.38381, R@20: 0.0479, N@20: 0.0375, time:110.13 seconds
+Epoch: 028, aver_loss : 6.38126, R@20: 0.0476, N@20: 0.0373, time:109.76 seconds
+Epoch: 029, aver_loss : 6.37872, R@20: 0.0473, N@20: 0.0370, time:110.05 seconds
+Epoch: 030, aver_loss : 6.37657, R@20: 0.0470, N@20: 0.0368, time:110.28 seconds
+Epoch: 031, aver_loss : 6.37455, R@20: 0.0466, N@20: 0.0365, time:109.96 seconds
+Epoch: 032, aver_loss : 6.37300, R@20: 0.0464, N@20: 0.0363, time:109.98 seconds
+Epoch: 033, aver_loss : 6.37158, R@20: 0.0460, N@20: 0.0361, time:110.22 seconds
+Epoch: 034, aver_loss : 6.37001, R@20: 0.0457, N@20: 0.0359, time:110.24 seconds
+Epoch: 035, aver_loss : 6.36897, R@20: 0.0454, N@20: 0.0356, time:110.15 seconds
+Epoch: 036, aver_loss : 6.36778, R@20: 0.0451, N@20: 0.0354, time:110.26 seconds
+Epoch: 037, aver_loss : 6.36681, R@20: 0.0449, N@20: 0.0352, time:110.17 seconds
+Epoch: 038, aver_loss : 6.36610, R@20: 0.0447, N@20: 0.0350, time:110.02 seconds
+Epoch: 039, aver_loss : 6.36530, R@20: 0.0446, N@20: 0.0349, time:110.19 seconds
+Epoch: 040, aver_loss : 6.36434, R@20: 0.0442, N@20: 0.0347, time:110.13 seconds
+
+========== BEST RESULT ==========
+Best Epoch: 20
+Recall@20: 0.0494, NDCG@20: 0.0387
+Config:
+{
+  "init": "normal",
+  "init_weight": 0.01,
+  "K": 3,
+  "lambda": 0.05,
+  "dim": 64,
+  "decay": 0.0001,
+  "lr": 0.001,
+  "seed": 0,
+  "ssl_tmp": 0.2,
+  "ssl_decay": 0.5,
+  "drop_ratio": 0.1,
+  "type": "ED"
+}
+Log saved to: ../log/NR-GCF_InfoNCE_amazon-book_20250808_012700.log

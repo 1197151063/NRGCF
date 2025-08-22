@@ -1,0 +1,43 @@
+Epoch: 001, aver_loss : 2.85359, R@20: 0.0670, N@20: 0.0551, time:25.45 seconds
+Epoch: 002, aver_loss : 2.43903, R@20: 0.0687, N@20: 0.0567, time:25.66 seconds
+Epoch: 003, aver_loss : 2.41251, R@20: 0.0694, N@20: 0.0568, time:25.70 seconds
+Epoch: 004, aver_loss : 2.39914, R@20: 0.0690, N@20: 0.0564, time:25.86 seconds
+Epoch: 005, aver_loss : 2.39267, R@20: 0.0676, N@20: 0.0547, time:25.74 seconds
+Epoch: 006, aver_loss : 2.38730, R@20: 0.0686, N@20: 0.0560, time:25.74 seconds
+Epoch: 007, aver_loss : 2.38270, R@20: 0.0682, N@20: 0.0558, time:25.76 seconds
+Epoch: 008, aver_loss : 2.38029, R@20: 0.0681, N@20: 0.0558, time:25.76 seconds
+Epoch: 009, aver_loss : 2.37716, R@20: 0.0676, N@20: 0.0553, time:25.77 seconds
+Epoch: 010, aver_loss : 2.37479, R@20: 0.0687, N@20: 0.0562, time:25.78 seconds
+Epoch: 011, aver_loss : 2.37326, R@20: 0.0676, N@20: 0.0554, time:25.76 seconds
+Epoch: 012, aver_loss : 2.37250, R@20: 0.0682, N@20: 0.0556, time:25.81 seconds
+Epoch: 013, aver_loss : 2.37036, R@20: 0.0669, N@20: 0.0549, time:25.73 seconds
+Epoch: 014, aver_loss : 2.36860, R@20: 0.0667, N@20: 0.0547, time:25.78 seconds
+Epoch: 015, aver_loss : 2.36747, R@20: 0.0672, N@20: 0.0549, time:25.69 seconds
+Epoch: 016, aver_loss : 2.36444, R@20: 0.0663, N@20: 0.0542, time:25.77 seconds
+Epoch: 017, aver_loss : 2.36581, R@20: 0.0674, N@20: 0.0553, time:25.93 seconds
+Epoch: 018, aver_loss : 2.36415, R@20: 0.0665, N@20: 0.0545, time:25.87 seconds
+Epoch: 019, aver_loss : 2.36256, R@20: 0.0670, N@20: 0.0551, time:25.57 seconds
+Epoch: 020, aver_loss : 2.36303, R@20: 0.0677, N@20: 0.0554, time:25.86 seconds
+Epoch: 021, aver_loss : 2.36028, R@20: 0.0667, N@20: 0.0550, time:25.74 seconds
+Epoch: 022, aver_loss : 2.36048, R@20: 0.0678, N@20: 0.0556, time:25.76 seconds
+Epoch: 023, aver_loss : 2.35949, R@20: 0.0666, N@20: 0.0549, time:25.71 seconds
+
+========== BEST RESULT ==========
+Best Epoch: 3
+Recall@20: 0.0694, NDCG@20: 0.0568
+Config:
+{
+  "init": "normal",
+  "init_weight": 0.01,
+  "K": 3,
+  "lambda": 0.2,
+  "dim": 64,
+  "decay": 0.0001,
+  "lr": 0.001,
+  "seed": 0,
+  "ssl_tmp": 0.2,
+  "ssl_decay": 0.2,
+  "drop_ratio": 0.1,
+  "type": "ED"
+}
+Log saved to: ../log/NR-GCF_InfoNCE_yelp2018_20250807_161257.log
